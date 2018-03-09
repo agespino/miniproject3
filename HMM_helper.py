@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 from matplotlib import animation
 from matplotlib.animation import FuncAnimation
+from makeRhymeDic import getRhymeDic
+import random
 
 
 ####################
@@ -85,9 +87,10 @@ def parse_observations(text):
 
     for line in lines:
         obs_elem = []
-        
+        if len(line) == 1:
+            continue
         for word in line:
-            word = re.sub(r'[^\w]', '', word).lower()
+            word = ''.join([char for char in word if char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\'-"])
             if word not in obs_map:
                 # Add unique words to the observations map.
                 obs_map[word] = obs_counter
@@ -119,6 +122,33 @@ def sample_sentence(hmm, obs_map, n_words=100):
 
     return ' '.join(sentence).capitalize() + '\n'
 
+def sample_couplet(hmm, obs_map, n_words=100):
+    # generate and return two rhymin sentences and return as a list
+
+    # pick a random  pair of rhyming words
+    rhymeDic = getRhymeDic()
+    rhyme1, rhyme2 = random.choice(list(rhymeDic.items()))
+    rhyme1 = ''.join([char for char in rhyme1 if char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"])
+    rhyme2 = ''.join([char for char in rhyme2 if char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"])
+    # print(rhyme1, rhyme2)
+
+
+    # Get reverse map.
+    obs_map_r = obs_map_reverser(obs_map)
+    rhyme1_i = obs_map[rhyme1]
+    rhyme2_i = obs_map[rhyme2]
+
+    # Sample and convert sentence.
+    emission1, states1 = hmm.generate_emission(n_words, obs_map_r, rhyme1_i)
+    sentence1 = [obs_map_r[i] for i in emission1]
+    sentence1 = sentence1[::-1]
+
+    # Sample and convert sentence.
+    emission2, states2 = hmm.generate_emission(n_words, obs_map_r, rhyme2_i)
+    sentence2 = [obs_map_r[i] for i in emission2]
+    sentence2 = sentence2[::-1]
+
+    return [' '.join(sentence1).capitalize() , ' '.join(sentence2).capitalize() ]
 
 ####################
 # HMM VISUALIZATION FUNCTIONS
