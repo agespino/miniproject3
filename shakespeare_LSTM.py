@@ -1,6 +1,8 @@
 # Reference: https://machinelearningmastery.com/text-generation-lstm-recurrent
 # -neural-networks-python-keras/
 
+# Create model and fit the data
+
 import numpy as np 
 from keras.models import Sequential
 from keras.layers import Dense
@@ -64,4 +66,4 @@ checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1,
 callbacks_list = [checkpoint]
 
 # Fit the data
-model.fit(X, y, epochs=10, batch_size=128, callbacks=callbacks_list)
+model.fit(X, y, epochs=20, batch_size=128, callbacks=callbacks_list)
