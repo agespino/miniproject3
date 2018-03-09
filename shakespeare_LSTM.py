@@ -38,4 +38,30 @@ for i in range(0, n_chars - seq_length, step_size):
     seq_out = raw_text[i + seq_length]
     dataX.append([char_to_int[char] for char in seq_in]) 
     dataY.append(char_to_int[seq_out])
-print('Total Patterns: ', len(dataX))
+n_patterns = len(dataX)
+print('Total Patterns: ', n_patterns)
+
+# Reshape the data to be (samples, time steps, features)
+X = np.reshape(dataX, (n_patterns, seq_length, 1))
+# Normalize
+X = X / float(n_vocab)
+# One hot encode output variable
+y = np_utils.to_categorical(dataY)
+
+
+# Define the LSTM model
+model = Sequential()
+model.add(LSTM(256, input_shape=(X.shape[1], X.shape[2])))
+model.add(Dropout(0.2))
+model.add(Dense(y.shape[1], activation='softmax'))
+# model.add(Lambda(lambda x: x / temp))
+model.compile(loss='categorical_crossentropy', optimizer='adam')
+
+# Define the save point
+filepath = 'weights.hdf5'
+checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, 
+    save_best_only=True, mode='min')
+callbacks_list = [checkpoint]
+
+# Fit the data
+model.fit(X, y, epochs=10, batch_size=128, callbacks=callbacks_list)
