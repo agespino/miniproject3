@@ -90,7 +90,8 @@ def parse_observations(text):
         if len(line) == 1:
             continue
         for word in line:
-            word = ''.join([char for char in word if char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\'-"])
+            word = ''.join([char for char in word if \
+                char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\'-"]).lower()
             if word not in obs_map:
                 # Add unique words to the observations map.
                 obs_map[word] = obs_counter

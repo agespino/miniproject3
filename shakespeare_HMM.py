@@ -26,7 +26,7 @@ obs, obs_map = parse_observations(f.read())
 X = obs
 
 N_states = 10
-N_iters = 100
+N_iters = 50
 
 L = N_states
 D = len(obs_map) + 1
