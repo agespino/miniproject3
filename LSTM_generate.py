@@ -54,7 +54,7 @@ y = np_utils.to_categorical(dataY)
 
 # Define the LSTM model
 model = Sequential()
-model.add(LSTM(10, input_shape=(X.shape[1], X.shape[2])))
+model.add(LSTM(256, input_shape=(X.shape[1], X.shape[2])))
 model.add(Dropout(0.2))
 model.add(Dense(y.shape[1], activation='softmax'))
 # model.add(Lambda(lambda x: x / temp))
@@ -69,6 +69,9 @@ model.compile(loss='categorical_crossentropy', optimizer='adam')
 seed = "shall i compare thee to a summer's day?\n"
 pattern = [char_to_int[char] for char in seed]
 
+# start = numpy.random.randint(0, len(dataX)-1)
+# pattern = dataX[start]
+
 # Generate the characters
 for i in range(100):
     x = np.reshape(pattern, (1, len(pattern), 1))
@@ -77,7 +80,7 @@ for i in range(100):
     index = np.argmax(prediction)
     result = int_to_char[index]
     seq_in = [int_to_char[value] for value in pattern]
-    print(result)
+    sys.stdout.write(result)
     pattern.append(index)
     pattern = pattern[1:]
 
