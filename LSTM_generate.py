@@ -6,9 +6,7 @@
 import sys
 import numpy as np 
 from keras.models import Sequential
-from keras.layers import Dense
-from keras.layers import Dropout
-from keras.layers import LSTM
+from keras.layers import Dense, Dropout, LSTM, Activation, Lambda
 from keras.callbacks import ModelCheckpoint
 from keras.utils import np_utils
 
@@ -53,27 +51,29 @@ X = X / float(n_vocab)
 y = np_utils.to_categorical(dataY)
 
 # Define the LSTM model
+temp = 0.5
 model = Sequential()
-model.add(LSTM(256, input_shape=(X.shape[1], X.shape[2])))
+model.add(LSTM(256, input_shape=(X.shape[1], X.shape[2]), return_sequences=True))
 model.add(Dropout(0.2))
-model.add(Dense(y.shape[1], activation='softmax'))
-# model.add(Lambda(lambda x: x / temp))
+model.add(LSTM(256))
+model.add(Dropout(0.2))
+model.add(Dense(y.shape[1]))
+model.add(Lambda(lambda x: x / temp))
+model.add(Activation('softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam')
 
 # Load the weights of the network
-filename = 'weights.hdf5'
+filename = 'weights_two_layers.hdf5'
 model.load_weights(filename)
 model.compile(loss='categorical_crossentropy', optimizer='adam')
 
 # Pick the seed
-seed = "shall i compare thee to a summer's day?\n"
+# seed = "shall i compare thee to a summer's day?\n"
+seed = "when in disgrace with fortune and men's "
 pattern = [char_to_int[char] for char in seed]
 
-# start = numpy.random.randint(0, len(dataX)-1)
-# pattern = dataX[start]
-
 # Generate the characters
-for i in range(100):
+for i in range(1000):
     x = np.reshape(pattern, (1, len(pattern), 1))
     x = x / float(n_vocab)
     prediction = model.predict(x)
@@ -83,4 +83,3 @@ for i in range(100):
     sys.stdout.write(result)
     pattern.append(index)
     pattern = pattern[1:]
-

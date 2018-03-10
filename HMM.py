@@ -438,10 +438,6 @@ class HiddenMarkovModel:
             next_state = 0
 
             while rand_var > 0:
-                # print(rand_var)
-                # print(next_state)
-                # print(state)
-                # print(np.shape(self.A))
                 if state >= 10 or next_state >= 10:
                     break
                 rand_var -= self.A[state][next_state]

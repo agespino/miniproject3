@@ -129,8 +129,8 @@ def sample_couplet(hmm, obs_map, n_words=100):
     # pick a random  pair of rhyming words
     rhymeDic = getRhymeDic()
     rhyme1, rhyme2 = random.choice(list(rhymeDic.items()))
-    rhyme1 = ''.join([char for char in rhyme1 if char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"])
-    rhyme2 = ''.join([char for char in rhyme2 if char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"])
+    rhyme1 = ''.join([char for char in rhyme1 if char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'-"]).lower()
+    rhyme2 = ''.join([char for char in rhyme2 if char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'-"]).lower()
     # print(rhyme1, rhyme2)
 
 
