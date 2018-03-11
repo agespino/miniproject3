@@ -1,5 +1,4 @@
 
-
 def getRhymeDic():
 
 	f = open("./data/shakespeare.txt", "r")

@@ -6,7 +6,7 @@
 import sys
 import numpy as np 
 from keras.models import Sequential
-from keras.layers import Dense, Dropout, LSTM, Activation, Lambda
+from keras.layers import Dense, Activation, Dropout, Lambda, LSTM
 from keras.callbacks import ModelCheckpoint
 from keras.utils import np_utils
 
@@ -51,7 +51,7 @@ X = X / float(n_vocab)
 y = np_utils.to_categorical(dataY)
 
 # Define the LSTM model
-temp = 0.5
+temp = 0.1
 model = Sequential()
 model.add(LSTM(256, input_shape=(X.shape[1], X.shape[2]), return_sequences=True))
 model.add(Dropout(0.2))
@@ -60,7 +60,6 @@ model.add(Dropout(0.2))
 model.add(Dense(y.shape[1]))
 model.add(Lambda(lambda x: x / temp))
 model.add(Activation('softmax'))
-model.compile(loss='categorical_crossentropy', optimizer='adam')
 
 # Load the weights of the network
 filename = 'weights_two_layers.hdf5'
@@ -68,16 +67,15 @@ model.load_weights(filename)
 model.compile(loss='categorical_crossentropy', optimizer='adam')
 
 # Pick the seed
-# seed = "shall i compare thee to a summer's day?\n"
-seed = "when in disgrace with fortune and men's "
+seed = "shall i compare thee to a summer's day?\n"
 pattern = [char_to_int[char] for char in seed]
 
 # Generate the characters
-for i in range(1000):
+for i in range(500):
     x = np.reshape(pattern, (1, len(pattern), 1))
     x = x / float(n_vocab)
     prediction = model.predict(x)
-    index = np.argmax(prediction)
+    index = np.random.choice(range(len(np.ravel(prediction))), p=np.ravel(prediction))
     result = int_to_char[index]
     seq_in = [int_to_char[value] for value in pattern]
     sys.stdout.write(result)

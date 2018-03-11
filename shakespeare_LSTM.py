@@ -50,22 +50,23 @@ y = np_utils.to_categorical(dataY)
 
 
 # Define the LSTM model
-temp = 0.5
 model = Sequential()
-model.add(LSTM(200, input_shape=(X.shape[1], X.shape[2]), return_sequences=True))
+model.add(LSTM(256, input_shape=(X.shape[1], X.shape[2]), return_sequences=True))
 model.add(Dropout(0.2))
-model.add(LSTM(200))
+model.add(LSTM(256))
 model.add(Dropout(0.2))
 model.add(Dense(y.shape[1]))
-# model.add(Lambda(lambda x: x / temp))
 model.add(Activation('softmax'))
+filename = 'weights_two_layers.hdf5'
+# Load weights
+model.load_weights(filename)
 model.compile(loss='categorical_crossentropy', optimizer='adam')
 
 # Define the save point
 filepath = 'weights_two_layers.hdf5'
 checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, 
-    save_best_only=True, mode='min')
+    save_best_only=False, mode='min')
 callbacks_list = [checkpoint]
 
 # Fit the data
-model.fit(X, y, epochs=250, batch_size=64, callbacks=callbacks_list)
+model.fit(X, y, epochs=500, batch_size=64, callbacks=callbacks_list)

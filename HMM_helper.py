@@ -90,8 +90,7 @@ def parse_observations(text):
         if len(line) == 1:
             continue
         for word in line:
-            word = ''.join([char for char in word if \
-                char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\'-"]).lower()
+            word = ''.join([char for char in word if char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\'-"]).lower()
             if word not in obs_map:
                 # Add unique words to the observations map.
                 obs_map[word] = obs_counter
@@ -129,8 +128,8 @@ def sample_couplet(hmm, obs_map, n_words=100):
     # pick a random  pair of rhyming words
     rhymeDic = getRhymeDic()
     rhyme1, rhyme2 = random.choice(list(rhymeDic.items()))
-    rhyme1 = ''.join([char for char in rhyme1 if char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'-"]).lower()
-    rhyme2 = ''.join([char for char in rhyme2 if char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'-"]).lower()
+    rhyme1 = ''.join([char for char in rhyme1 if char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"]).lower()
+    rhyme2 = ''.join([char for char in rhyme2 if char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"]).lower()
     # print(rhyme1, rhyme2)
 
 
