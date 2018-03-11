@@ -1,6 +1,6 @@
 from HMM_helper import *
 from HMM import *
-from makeRhymeDic import getRhymeDicSpenser
+from makeRhymeDic import getRhymeDicSpencer
 import random
 import numpy as np
 
@@ -38,7 +38,7 @@ X = obs
 
 # Initialize the parameters
 N_states = 10
-N_iters = 10
+N_iters = 1000
 
 
 L = N_states

@@ -190,6 +190,17 @@ def sample_spenser_couplet(hmm, obs_map, n_words=100):
 
     return [' '.join(sentence1).capitalize() , ' '.join(sentence2).capitalize() ]
 
+
+def sample_limerick(hmm, obs_map, n_words=100):
+    # Get reverse map.
+    obs_map_r = obs_map_reverser(obs_map)
+
+    # Sample and convert sentence.
+    emission, states = hmm.generate_emission(n_words)
+    sentence = [obs_map_r[i] for i in emission]
+
+    return ' '.join(sentence).capitalize() + '\n'
+
 ####################
 # HMM VISUALIZATION FUNCTIONS
 ####################
