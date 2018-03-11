@@ -11,7 +11,9 @@ X = obs
 
 # Initialize the parameters
 N_states = 10
-N_iters = 1000
+N_iters = 10
+
+
 L = N_states
 D = len(obs_map) + 1
 
