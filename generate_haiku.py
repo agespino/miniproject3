@@ -17,14 +17,18 @@ O = np.loadtxt('HMM_O.txt')
 HMM = HiddenMarkovModel(A, O)
 
 # Generate the sonnet
+
 poem = [] 
 poem.append(sample_N_syllables(HMM, obs_map, 5))
 poem.append(sample_N_syllables(HMM, obs_map, 7))
 poem.append(sample_N_syllables(HMM, obs_map, 5))
 
+f = open("haiku.txt", "w")
 
 for line in poem:
-    print(line)
+    f.write(line + "\n")
+
+f.close()
 """
 
 f = open("shakespeare_sonnet.txt", "w")

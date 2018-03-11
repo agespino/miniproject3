@@ -374,7 +374,7 @@ class HiddenMarkovModel:
                 for xt in range(self.D):
                     self.O[curr][xt] = O_num[curr][xt] / O_den[curr]
 
-    def generate_emission(self, M, obs_map_r, start_state = None):
+    def generate_emission_shakespeare(self, M, obs_map_r, start_state = None):
         '''
         Generates an emission of length M, assuming that the starting state
         is chosen uniformly at random. 
@@ -403,6 +403,141 @@ class HiddenMarkovModel:
                 )
             emission.append(start_state)
             N_syllables -= syllD[obs_map_r[start_state]]
+            # next_obs = start_state
+        
+
+        for t in range(M - 1):
+            # Append state.
+            states.append(state)
+
+            # Sample next observation.
+            rand_var = random.uniform(0, 1)
+            next_obs = 0
+            emission_syllables = 0
+
+            while True:
+                # if emission_syllables > N_syllables we need to find a different emission
+                rand_var = random.uniform(0, 1)
+                next_obs = 0
+                emission_syllables = 0
+
+                while rand_var > 0:
+                    # print(state)
+                    rand_var -= self.O[state][next_obs]
+                    next_obs += 1
+
+                next_obs -= 1
+                emission_syllables = syllD[obs_map_r[next_obs]]
+                if emission_syllables <= N_syllables:
+                    break
+         
+            emission.append(next_obs)
+            N_syllables -=  emission_syllables
+            # Sample next state.
+            rand_var = random.uniform(0, 1)
+            next_state = 0
+
+            while rand_var > 0:
+                if state >= 10 or next_state >= 10:
+                    break
+                rand_var -= self.A[state][next_state]
+                next_state += 1
+
+            next_state -= 1
+            state = next_state
+
+            if N_syllables == 0:
+                break
+
+
+        return emission, states
+
+    def generate_emission_spenser(self, M, start_state = None):
+        '''
+        Generates an emission of length M, assuming that the starting state
+        is chosen uniformly at random. 
+
+        Arguments:
+            M:          Length of the emission to generate.
+
+        Returns:
+            emission:   The randomly generated emission as a list.
+
+            states:     The randomly generated states as a list.
+        '''
+
+        emission = []
+        states = []
+        O = np.array(self.O)
+        if start_state == None:
+            state = random.choice(range(self.L))
+        else:
+            col_prob = np.sum(O[:,start_state])
+            state = np.random.choice(
+                range(self.L),
+                p = O[:,start_state] * (1.0 / col_prob)
+                )
+            emission.append(start_state)
+            # next_obs = start_state
+        
+
+        for t in range(M - 1):
+            # Append state.
+            states.append(state)
+
+            # Sample next observation.
+            rand_var = random.uniform(0, 1)
+            next_obs = 0
+            emission_syllables = 0
+            rand_var = random.uniform(0, 1)
+            next_obs = 0
+            emission_syllables = 0
+
+            while rand_var > 0:
+                # print(state)
+                rand_var -= self.O[state][next_obs]
+                next_obs += 1
+
+            next_obs -= 1
+                
+         
+            emission.append(next_obs)
+            # Sample next state.
+            rand_var = random.uniform(0, 1)
+            next_state = 0
+
+            while rand_var > 0:
+                if state >= 10 or next_state >= 10:
+                    break
+                rand_var -= self.A[state][next_state]
+                next_state += 1
+
+            next_state -= 1
+            state = next_state
+
+        return emission, states
+
+
+    def generate_emission_syllables(self, M, obs_map_r, N_syllables):
+        '''
+        Generates an emission of length M, assuming that the starting state
+        is chosen uniformly at random. 
+
+        Arguments:
+            M:          Length of the emission to generate.
+
+        Returns:
+            emission:   The randomly generated emission as a list.
+
+            states:     The randomly generated states as a list.
+        '''
+        syllD = syllable_dict('./data/Syllable_dictionary.txt')
+
+        emission = []
+        states = []
+        O = np.array(self.O)
+        state = random.choice(range(self.L))
+        N_syllables -= syllD[obs_map_r[state]]
             # next_obs = start_state
         
 

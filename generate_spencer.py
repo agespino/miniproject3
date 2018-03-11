@@ -1,6 +1,6 @@
 from HMM_helper import *
 from HMM import *
-from makeRhymeDic import getRhymeDicSpenser
+from makeRhymeDic import getRhymeDicShakes
 import random
 import numpy as np
 
@@ -32,39 +32,32 @@ def parse_observations(text):
 
     return obs, obs_map
 
-f = open('data/spenser.txt')
+# Parse the text file
+f = open('./data/spenser.txt')
 obs, obs_map = parse_observations(f.read())
+f.close()
 X = obs
 
-# Initialize the parameters
-N_states = 10
-N_iters = 10
+# Parse the A and O matrices
+A = np.loadtxt('spencer_HMM_A.txt')
+O = np.loadtxt('spencer_HMM_O.txt')
 
-
-L = N_states
-D = len(obs_map) + 1
-
-# Randomly initialize and normalize matrix A.
-A = [[random.random() for i in range(L)] for j in range(L)]
-
-for i in range(len(A)):
-    norm = sum(A[i])
-    for j in range(len(A[i])):
-        A[i][j] /= norm
-
-# Randomly initialize and normalize matrix O.
-O = [[random.random() for i in range(D)] for j in range(L)]
-
-for i in range(len(O)):
-    norm = sum(O[i])
-    for j in range(len(O[i])):
-        O[i][j] /= norm
-
-# Train an HMM with unlabeled data.
+# Create the model
 HMM = HiddenMarkovModel(A, O)
-print('Running ...')
-HMM.unsupervised_learning(X, N_iters)
 
-# Save the model
-np.savetxt('spencer_HMM_A.txt', HMM.A)
-np.savetxt('spencer_HMM_O.txt', HMM.O)
+# Generate the sonnet
+couplets = [] 
+for i in range(7):
+    couplets.append(sample_spenser_couplet(HMM, obs_map, 10))
+print()
+
+
+f = open("spencer_sonnet.txt", "w")
+for i in range(3):
+    f.write(couplets[2 * i][0] + "\n")
+    f.write("    " + couplets[2 * i + 1][0] + "\n")
+    f.write("    " + couplets[2 * i][1] + "\n")
+    f.write("    " + couplets[2 * i + 1][1] + "\n")
+f.write(couplets[6][0] + "\n")
+f.write("    " + couplets[6][1] + "\n")
+f.close()
