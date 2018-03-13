@@ -49,15 +49,14 @@ HMM = HiddenMarkovModel(A, O)
 couplets = [] 
 for i in range(7):
     couplets.append(sample_spenser_couplet(HMM, obs_map, 10))
-print()
 
 
-f = open("spencer_sonnet.txt", "w")
+f = open("generated_poems/spencer_sonnet.txt", "w")
 for i in range(3):
-    f.write(couplets[2 * i][0] + "\n")
-    f.write("    " + couplets[2 * i + 1][0] + "\n")
-    f.write("    " + couplets[2 * i][1] + "\n")
-    f.write("    " + couplets[2 * i + 1][1] + "\n")
-f.write(couplets[6][0] + "\n")
-f.write("    " + couplets[6][1] + "\n")
+    f.write(couplets[2 * i][0] )
+    f.write("    " + couplets[2 * i + 1][0] )
+    f.write("    " + couplets[2 * i][1] )
+    f.write("    " + couplets[2 * i + 1][1] )
+f.write(couplets[6][0] )
+f.write("    " + couplets[6][1] )
 f.close()

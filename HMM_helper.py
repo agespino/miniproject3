@@ -123,8 +123,6 @@ def sample_sentence(hmm, obs_map, n_words=100):
     return ' '.join(sentence).capitalize() + '\n'
 
 def sample_N_syllables(hmm, obs_map, n_syllables= 10):
-    # generate and return two rhymin sentences and return as a list
-
     # Get reverse map.
     obs_map_r = obs_map_reverser(obs_map)
 
@@ -140,27 +138,22 @@ def sample_shakes_couplet(hmm, obs_map, n_words=100):
     # pick a random  pair of rhyming words
     rhymeDic = getRhymeDicShakes()
     rhyme1, rhyme2 = random.choice(list(rhymeDic.items()))
-    rhyme1 = ''.join([char for char in rhyme1 if char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"]).lower()
-    rhyme2 = ''.join([char for char in rhyme2 if char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"]).lower()
-    # print(rhyme1, rhyme2)
-
+    rhyme2 = random.choice(rhyme2)
 
     # Get reverse map.
     obs_map_r = obs_map_reverser(obs_map)
-    rhyme1_i = obs_map[rhyme1]
-    rhyme2_i = obs_map[rhyme2]
 
-    # Sample and convert sentence.
-    emission1, states1 = hmm.generate_emission_shakespeare(n_words, obs_map_r, rhyme1_i)
-    sentence1 = [obs_map_r[i] for i in emission1]
-    sentence1 = sentence1[::-1]
+    poem = []
 
-    # Sample and convert sentence.
-    emission2, states2 = hmm.generate_emission_shakespeare(n_words, obs_map_r, rhyme2_i)
-    sentence2 = [obs_map_r[i] for i in emission2]
-    sentence2 = sentence2[::-1]
+    for rhyme in [rhyme1, rhyme2]:
+        # Sample and convert sentence.
+        rhyme = ''.join([char for char in rhyme if char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"]).lower()
+        emission1, states1 = hmm.generate_emission_shakespeare(n_words, obs_map_r,obs_map[rhyme])
+        sentence1 = [obs_map_r[i] for i in emission1]
+        sentence1 = sentence1[::-1]
+        poem.append(' '.join(sentence1).capitalize() + '\n')
 
-    return [' '.join(sentence1).capitalize() , ' '.join(sentence2).capitalize() ]
+    return poem
 
 def sample_spenser_couplet(hmm, obs_map, n_words=100):
     # generate and return two rhymin sentences and return as a list
@@ -168,38 +161,48 @@ def sample_spenser_couplet(hmm, obs_map, n_words=100):
     # pick a random  pair of rhyming words
     rhymeDic = getRhymeDicSpencer()
     rhyme1, rhyme2 = random.choice(list(rhymeDic.items()))
-    rhyme1 = ''.join([char for char in rhyme1 if char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"]).lower()
-    rhyme2 = ''.join([char for char in rhyme2 if char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"]).lower()
+    rhyme2 = random.choice(rhyme2)
     # print(rhyme1, rhyme2)
 
-
-    # Get reverse map.
-    obs_map_r = obs_map_reverser(obs_map)
-    rhyme1_i = obs_map[rhyme1]
-    rhyme2_i = obs_map[rhyme2]
-
-    # Sample and convert sentence.
-    emission1, states1 = hmm.generate_emission_spenser(n_words, rhyme1_i)
-    sentence1 = [obs_map_r[i] for i in emission1]
-    sentence1 = sentence1[::-1]
-
-    # Sample and convert sentence.
-    emission2, states2 = hmm.generate_emission_spenser(n_words, rhyme2_i)
-    sentence2 = [obs_map_r[i] for i in emission2]
-    sentence2 = sentence2[::-1]
-
-    return [' '.join(sentence1).capitalize() , ' '.join(sentence2).capitalize() ]
-
-
-def sample_limerick(hmm, obs_map, n_words=100):
     # Get reverse map.
     obs_map_r = obs_map_reverser(obs_map)
 
-    # Sample and convert sentence.
-    emission, states = hmm.generate_emission(n_words)
-    sentence = [obs_map_r[i] for i in emission]
+    poem = []
 
-    return ' '.join(sentence).capitalize() + '\n'
+    for rhyme in [rhyme1, rhyme2]:
+        # Sample and convert sentence.
+        rhyme = ''.join([char for char in rhyme if char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"]).lower()
+        emission1, states1 = hmm.generate_emission_spenser(n_words, obs_map[rhyme])
+        sentence1 = [obs_map_r[i] for i in emission1]
+        sentence1 = sentence1[::-1]
+        poem.append(' '.join(sentence1).capitalize() + '\n')
+
+    return poem
+
+
+def sample_limerick(hmm, obs_map, n_words):
+    # Get reverse map.
+    obs_map_r = obs_map_reverser(obs_map)
+    rhymeDic = getRhymeDicSpencer()
+
+    poem = []
+    rhymeA1, rhymeA2 =  random.choice(list(rhymeDic.items()))
+    rhymeA2 = random.choice(rhymeA2)
+
+    rhymeA3 = random.choice(rhymeDic[rhymeA1])
+
+    rhymeB1, rhymeB2 = random.choice(list(rhymeDic.items()))
+    rhymeB2 = random.choice(rhymeB2)
+
+    # Sample and convert sentence.
+    for rhyme, syllables in zip([rhymeA1, rhymeA2, rhymeB1, rhymeB2, rhymeA3], [8, 8, 5, 5, 8]):
+        rhyme = ''.join([char for char in rhyme if char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"]).lower()
+        emission, states = hmm.generate_emission_shakespeare(syllables, obs_map_r,obs_map[rhyme])
+        sentence = [obs_map_r[i] for i in emission]
+        sentence = sentence[::-1]
+        poem.append(' '.join(sentence).capitalize() + '\n')
+
+    return poem
 
 ####################
 # HMM VISUALIZATION FUNCTIONS

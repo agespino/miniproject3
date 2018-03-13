@@ -21,18 +21,18 @@ HMM = HiddenMarkovModel(A, O)
 couplets = [] 
 for i in range(7):
     couplets.append(sample_shakes_couplet(HMM, obs_map, 10))
-print()
 
 
-f = open("shakespeare_sonnet.txt", "w")
+f = open("generated_poems/shakespeare_sonnet.txt", "w")
 for i in range(3):
-    f.write(couplets[2 * i][0] + "\n")
-    f.write(couplets[2 * i + 1][0] + "\n")
-    f.write(couplets[2 * i][1] + "\n")
-    f.write(couplets[2 * i + 1][1] + "\n")
-f.write(couplets[6][0] + "\n")
-f.write(couplets[6][1] + "\n")
+    f.write(couplets[2 * i][0] )
+    f.write(couplets[2 * i + 1][0] )
+    f.write(couplets[2 * i][1] )
+    f.write(couplets[2 * i + 1][1] )
+f.write(couplets[6][0] )
+f.write(couplets[6][1] )
 f.close()
+
 
 visualize_sparsities(HMM)
 states_to_wordclouds(HMM, obs_map)
