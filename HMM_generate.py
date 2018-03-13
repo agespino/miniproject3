@@ -29,3 +29,6 @@ for i in range(3):
     print(couplets[2 * i + 1][1])
 print(couplets[6][0])
 print(couplets[6][1])
+
+visualize_sparsities(HMM)
+states_to_wordclouds(HMM, obs_map)

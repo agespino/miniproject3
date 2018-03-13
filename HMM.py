@@ -451,6 +451,38 @@ class HiddenMarkovModel:
 
 
         return emission, states
+        
+
+    def generate_naive_emission(self, M):
+        '''
+        Generates an emission of length M, assuming that the starting state
+        is chosen uniformly at random. 
+
+        Arguments:
+            M:          Length of the emission to generate.
+
+        Returns:
+            emission:   The randomly generated emission as a list.
+
+            states:     The randomly generated states as a list.
+        '''
+
+        emission = []
+        states = []
+
+        y_i = np.random.choice(range(self.L))
+        states.append(y_i)
+
+        x_i = np.random.choice(range(self.D), p=self.O[y_i])
+        emission.append(x_i)
+
+        for i in range(M - 1):
+            y_i = np.random.choice(range(self.L), p=self.A[y_i])
+            states.append(y_i)
+            x_i = np.random.choice(range(self.D), p=self.O[y_i])
+            emission.append(x_i)
+
+        return emission, states
 
 
     def probability_alphas(self, x):

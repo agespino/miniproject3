@@ -6,12 +6,12 @@ import numpy as np
 
 # Parse the text file
 f = open('data/shakespeare.txt')
-obs, obs_map = parse_observations(f.read())
-X = obs
+X, obs_map = parse_observations(f.read())
+print('Training size: ', len(X))
 
 # Initialize the parameters
-N_states = 10
-N_iters = 1000
+N_states = 8
+N_iters = 100
 L = N_states
 D = len(obs_map) + 1
 

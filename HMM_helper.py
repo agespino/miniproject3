@@ -41,7 +41,7 @@ def text_to_wordcloud(text, max_words=50, title='', show=True):
         plt.imshow(wordcloud, interpolation='bilinear')
         plt.axis('off')
         plt.title(title, fontsize=24)
-        plt.show()
+        plt.savefig()
 
     return wordcloud
 
@@ -53,7 +53,7 @@ def states_to_wordclouds(hmm, obs_map, max_words=50, show=True):
     wordclouds = []
 
     # Generate a large emission.
-    emission, states = hmm.generate_emission(M)
+    emission, states = hmm.generate_naive_emission(M)
 
     # For each state, get a list of observations that have been emitted
     # from that state.
@@ -117,7 +117,7 @@ def sample_sentence(hmm, obs_map, n_words=100):
     obs_map_r = obs_map_reverser(obs_map)
 
     # Sample and convert sentence.
-    emission, states = hmm.generate_emission(n_words)
+    emission, states = hmm.generate_naive_emission(n_words)
     sentence = [obs_map_r[i] for i in emission]
 
     return ' '.join(sentence).capitalize() + '\n'

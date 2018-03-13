@@ -51,7 +51,8 @@ X = X / float(n_vocab)
 y = np_utils.to_categorical(dataY)
 
 # Define the LSTM model
-temp = 0.1
+temp = 1.5
+print('Temperature: ', temp)
 model = Sequential()
 model.add(LSTM(256, input_shape=(X.shape[1], X.shape[2]), return_sequences=True))
 model.add(Dropout(0.2))
@@ -71,7 +72,7 @@ seed = "shall i compare thee to a summer's day?\n"
 pattern = [char_to_int[char] for char in seed]
 
 # Generate the characters
-for i in range(500):
+for i in range(700):
     x = np.reshape(pattern, (1, len(pattern), 1))
     x = x / float(n_vocab)
     prediction = model.predict(x)
