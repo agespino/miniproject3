@@ -1716,6 +1716,7 @@ missed 1
 mistake 2
 mistaking E2 3
 mistress 2
+mistress’ 2
 misuse 2
 mixed 1
 moan 1
@@ -2748,6 +2749,7 @@ thinks 1
 thinly 2
 third 1
 this 1
+‘this 1
 thither 2
 thorns 1
 those 1

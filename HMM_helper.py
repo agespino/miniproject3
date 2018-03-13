@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 from matplotlib import animation
 from matplotlib.animation import FuncAnimation
-from makeRhymeDic import getRhymeDic
+from makeRhymeDic import getRhymeDicShakes, getRhymeDicSpencer
 import random
 
 
@@ -122,11 +122,23 @@ def sample_sentence(hmm, obs_map, n_words=100):
 
     return ' '.join(sentence).capitalize() + '\n'
 
-def sample_couplet(hmm, obs_map, n_words=100):
+def sample_N_syllables(hmm, obs_map, n_syllables= 10):
+    # generate and return two rhymin sentences and return as a list
+
+    # Get reverse map.
+    obs_map_r = obs_map_reverser(obs_map)
+
+    # Sample and convert sentence.
+    emission, states = hmm.generate_emission_syllables(n_syllables, obs_map_r, n_syllables)
+    sentence = [obs_map_r[i] for i in emission]
+
+    return ' '.join(sentence)
+
+def sample_shakes_couplet(hmm, obs_map, n_words=100):
     # generate and return two rhymin sentences and return as a list
 
     # pick a random  pair of rhyming words
-    rhymeDic = getRhymeDic()
+    rhymeDic = getRhymeDicShakes()
     rhyme1, rhyme2 = random.choice(list(rhymeDic.items()))
     rhyme1 = ''.join([char for char in rhyme1 if char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"]).lower()
     rhyme2 = ''.join([char for char in rhyme2 if char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"]).lower()
@@ -139,16 +151,55 @@ def sample_couplet(hmm, obs_map, n_words=100):
     rhyme2_i = obs_map[rhyme2]
 
     # Sample and convert sentence.
-    emission1, states1 = hmm.generate_emission(n_words, obs_map_r, rhyme1_i)
+    emission1, states1 = hmm.generate_emission_shakespeare(n_words, obs_map_r, rhyme1_i)
     sentence1 = [obs_map_r[i] for i in emission1]
     sentence1 = sentence1[::-1]
 
     # Sample and convert sentence.
-    emission2, states2 = hmm.generate_emission(n_words, obs_map_r, rhyme2_i)
+    emission2, states2 = hmm.generate_emission_shakespeare(n_words, obs_map_r, rhyme2_i)
     sentence2 = [obs_map_r[i] for i in emission2]
     sentence2 = sentence2[::-1]
 
     return [' '.join(sentence1).capitalize() , ' '.join(sentence2).capitalize() ]
+
+def sample_spenser_couplet(hmm, obs_map, n_words=100):
+    # generate and return two rhymin sentences and return as a list
+
+    # pick a random  pair of rhyming words
+    rhymeDic = getRhymeDicSpencer()
+    rhyme1, rhyme2 = random.choice(list(rhymeDic.items()))
+    rhyme1 = ''.join([char for char in rhyme1 if char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"]).lower()
+    rhyme2 = ''.join([char for char in rhyme2 if char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"]).lower()
+    # print(rhyme1, rhyme2)
+
+
+    # Get reverse map.
+    obs_map_r = obs_map_reverser(obs_map)
+    rhyme1_i = obs_map[rhyme1]
+    rhyme2_i = obs_map[rhyme2]
+
+    # Sample and convert sentence.
+    emission1, states1 = hmm.generate_emission_spenser(n_words, rhyme1_i)
+    sentence1 = [obs_map_r[i] for i in emission1]
+    sentence1 = sentence1[::-1]
+
+    # Sample and convert sentence.
+    emission2, states2 = hmm.generate_emission_spenser(n_words, rhyme2_i)
+    sentence2 = [obs_map_r[i] for i in emission2]
+    sentence2 = sentence2[::-1]
+
+    return [' '.join(sentence1).capitalize() , ' '.join(sentence2).capitalize() ]
+
+
+def sample_limerick(hmm, obs_map, n_words=100):
+    # Get reverse map.
+    obs_map_r = obs_map_reverser(obs_map)
+
+    # Sample and convert sentence.
+    emission, states = hmm.generate_emission(n_words)
+    sentence = [obs_map_r[i] for i in emission]
+
+    return ' '.join(sentence).capitalize() + '\n'
 
 ####################
 # HMM VISUALIZATION FUNCTIONS

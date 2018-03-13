@@ -1,6 +1,6 @@
 from HMM_helper import *
 from HMM import *
-from makeRhymeDic import getRhymeDic
+from makeRhymeDic import getRhymeDicShakes
 import random
 import numpy as np
 
@@ -12,6 +12,7 @@ print('Training size: ', len(X))
 # Initialize the parameters
 N_states = 8
 N_iters = 100
+
 L = N_states
 D = len(obs_map) + 1
 
